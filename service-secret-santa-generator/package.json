@@ -12,5 +12,8 @@
   "dependencies": {
     "express": "^4.16.3",
     "serverless-http": "^1.5.5"
+  },
+  "devDependencies": {
+    "mocha": "^5.0.5"
   }
 }
