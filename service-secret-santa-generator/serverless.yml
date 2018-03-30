@@ -1,6 +1,6 @@
 # serverless.yml
 
-service: express-app
+service: service-secret-santa-generator
 
 provider:
   name: aws
