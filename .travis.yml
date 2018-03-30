@@ -3,17 +3,9 @@ language: node_js
 node_js:
   - "6.10.0"
 
-jobs:
-  include:
-    - stage: compile
-      script:
-        - cd service-secret-santa-generator
-        - npm install
-    - stage: test
-      script:
-        - npm test
-    - stage: deploy
-      if: branch = master
-      script:
-        - npm install -g serverless
-        - sls deploy
+script:
+  - cd service-secret-santa-generator
+  - npm install
+  - npm test
+  - npm install -g serverless
+  - sls deploy
