@@ -1,0 +1,15 @@
+service: ui-secret-santa
+
+plugins:
+  - serverless-s3-sync
+
+provider:
+  name: aws
+  # nodejs is actually not used here -- serverless needs a runtime defined to work
+  runtime: nodejs6.10
+  #stage: prod
+
+custom:
+  s3Sync:
+    - bucketName: secretsatan.net
+      localDir: dist # required
