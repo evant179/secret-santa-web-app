@@ -14,5 +14,6 @@ script:
   - nvm use 8.10.0
   - nvm list
   - npm install -g @angular/cli
+  - npm install -g serverless
   - ng build
   - sls s3sync
