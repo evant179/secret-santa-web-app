@@ -2,6 +2,9 @@
 
 service: service-secret-santa-generator
 
+plugins:
+  - serverless-offline
+
 provider:
   name: aws
   runtime: nodejs6.10
