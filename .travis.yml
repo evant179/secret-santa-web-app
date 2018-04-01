@@ -9,3 +9,10 @@ script:
   - npm test
   - npm install -g serverless
   - sls deploy
+  - cd ../ui-secret-santa
+  - nvm install 8.10.0
+  - nvm use 8.10.0
+  - nvm list
+  - npm install -g @angular/cli
+  - ng build
+  - sls s3sync
