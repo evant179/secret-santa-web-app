@@ -6,4 +6,6 @@ app.get('/', function (req, res) {
   res.send('secret santa generator service works!!!!');
 });
 
+require('./app/routes/secret-santa.routes')(app);
+
 module.exports.handler = serverless(app);
