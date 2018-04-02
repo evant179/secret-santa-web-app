@@ -4,11 +4,13 @@ node_js:
   - "6.10.0"
 
 script:
+  # deploy service to lambda
   - cd service-secret-santa-generator
   - npm install
   - npm test
   - npm install -g serverless
   - sls deploy
+  # deploy UI to s3 bucket
   # - cd ../ui-secret-santa
   # - nvm install 8.10.0
   # - nvm use 8.10.0
