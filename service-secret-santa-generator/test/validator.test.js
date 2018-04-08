@@ -1,4 +1,5 @@
 const validator = require('../app/helpers/validator');
+const BadRequestError = require("../app/errors/bad-request-error");
 const ValidationError = require("../app/errors/validation-error");
 const SortedArraySet = require("collections/sorted-array-set");
 
@@ -15,7 +16,7 @@ describe('validator tests', function () {
 
     it('throws error on duplicate attendees', function () {
       let attendees = createNonUniqueAttendees();
-      expect(validator.verifyUniqueAttendees.bind(validator, attendees)).to.throw(ValidationError);
+      expect(validator.verifyUniqueAttendees.bind(validator, attendees)).to.throw(BadRequestError);
     });
   });
 });

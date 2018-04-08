@@ -1,4 +1,5 @@
 const SortedArraySet = require("collections/sorted-array-set");
+const BadRequestError = require("../errors/bad-request-error");
 const ValidationError = require("../errors/validation-error");
 
 exports.verifyUniqueAttendees = function (attendees) {
@@ -7,7 +8,7 @@ exports.verifyUniqueAttendees = function (attendees) {
     attendees.forEach((attendee) => {
         let name = attendee.name;
         if (!set.add(name)) {
-            throw new ValidationError(`Duplicate attendee name [${name}]`);
+            throw new BadRequestError(`Duplicate attendee name [${name}]`);
         }
     });
     return true;
