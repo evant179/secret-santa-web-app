@@ -9,12 +9,19 @@ exports.generate = function (req, res) {
     let availableNames = createAvailableNameList(attendees);
 
     let results = [];
-    attendees.forEach(attendee => {
-        result = {};
-        result.name = attendee.name;
-        result.selectedName = assignSelectedName(attendee, availableNames);
-        results.push(result);
-    });
+    try {
+        attendees.forEach(attendee => {
+            result = {};
+            result.name = attendee.name;
+            result.selectedName = assignSelectedName(attendee, availableNames);
+            results.push(result);
+        });
+    }
+    catch (e) {
+        let message = `Unable to generate secret santa results due to: ${e}`;
+        console.log(message);
+        return res.status(406).send({ error: message })
+    }
 
     console.log('Exit generate');
     console.log(results);
@@ -36,6 +43,10 @@ function assignSelectedName(attendee, availableNames) {
 
     // remove own name from pool
     remove(namePool, attendee.name);
+
+    if (namePool.length < 1) {
+        throw `[${attendee.name}] has no more names left in their remaining name pool!`;
+    }
 
     // choose selected name from remaining name pool
     let selectedName = _.sample(namePool);

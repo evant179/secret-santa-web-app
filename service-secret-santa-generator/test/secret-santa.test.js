@@ -9,12 +9,19 @@ const secretsanta = require('../app/controllers/secret-santa.controller');
 
 describe('secret-santa.controller tests', function () {
   describe('#generate', function () {
-    it('generates a secret santa per attendee', function () {
+    it('generates a selected name per attendee', function () {
       let req = createRequest();
       let res = mock.mockRes();
       secretsanta.generate(req, res);
       expect(res.status).to.be.calledWith(200);
       expect(res.status().send).to.be.calledWith(createExpectedResponse());
+    });
+
+    it('errors for a single attendee', function () {
+      let req = createRequestWithSingleAttendee();
+      let res = mock.mockRes();
+      secretsanta.generate(req, res);
+      expect(res.status).to.be.calledWith(406);
     });
   });
 });
@@ -27,6 +34,16 @@ function createRequest() {
     },
     {
       name: "name2"
+    }
+  ];
+  return req;
+}
+
+function createRequestWithSingleAttendee() {
+  let req = {};
+  req.body = [
+    {
+      name: "name1"
     }
   ];
   return req;
