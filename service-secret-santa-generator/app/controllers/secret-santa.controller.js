@@ -1,4 +1,5 @@
 const BadRequestError = require("../errors/bad-request-error");
+const GenerateError = require("../errors/generate-error");
 const validator = require("../helpers/validator");
 const _ = require("underscore");
 
@@ -10,26 +11,9 @@ exports.generate = function (req, res) {
 
         // verify request data
         validator.verifyUniqueAttendees(attendees);
+        let results = handleGenerate(attendees)
 
-        // initialize map used to keep track of available names for selection
-        let availableNames = createAvailableNameList(attendees);
-
-        let results = [];
-        try {
-            attendees.forEach(attendee => {
-                result = {};
-                result.name = attendee.name;
-                result.selectedName = assignSelectedName(attendee, availableNames);
-                results.push(result);
-            });
-        }
-        catch (e) {
-            console.log(e);
-            let error = { error: e.message, stack: e.stack };
-            return res.status(406).send(error);
-        }
-
-        console.log('Exit generate');
+        console.log('Exit generate with results');
         console.log(results);
         return res.status(200).send(results);
     }
@@ -38,11 +22,28 @@ exports.generate = function (req, res) {
         let error = { error: e.message, stack: e.stack };
         if (e instanceof BadRequestError) {
             return res.status(400).send(error);
+        } else if (e instanceof GenerateError) {
+            return res.status(406).send(error)
         } else {
             return res.status(500).send(error)
         }
     }
 };
+
+function handleGenerate(attendees) {
+    let results = [];
+    // initialize map used to keep track of available names for selection
+    let availableNames = createAvailableNameList(attendees);
+
+    attendees.forEach(attendee => {
+        result = {};
+        result.name = attendee.name;
+        result.selectedName = processSelectedName(attendee, availableNames);
+        results.push(result);
+    });
+
+    return results;
+}
 
 function createAvailableNameList(attendees) {
     let availableNames = [];
@@ -52,7 +53,7 @@ function createAvailableNameList(attendees) {
     return availableNames;
 }
 
-function assignSelectedName(attendee, availableNames) {
+function processSelectedName(attendee, availableNames) {
     let namePool = availableNames.slice(); // shallow copy
 
     // TODO - remove historic, overridden, excluded names from namePool
@@ -63,7 +64,7 @@ function assignSelectedName(attendee, availableNames) {
     if (namePool.length < 1) {
         let message = `Secret santa generation has stopped! Please try again. ` +
             `Reason: [${attendee.name}] has no more names left in their remaining name pool!`;
-        throw new Error(message);
+        throw new GenerateError(message);
     }
 
     // choose selected name from remaining name pool
