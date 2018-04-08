@@ -12,7 +12,8 @@
   "dependencies": {
     "body-parser": "^1.18.2",
     "express": "^4.16.3",
-    "serverless-http": "^1.5.5"
+    "serverless-http": "^1.5.5",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "chai": "^4.1.2",
