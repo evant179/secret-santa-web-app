@@ -14,7 +14,7 @@ describe('secret-santa.controller tests', function () {
       let res = mock.mockRes();
       secretsanta.generate(req, res);
       expect(res.status).to.be.calledWith(200);
-      // expect(res.status().send).to.be.calledWith({ name: "testName" });
+      expect(res.status().send).to.be.calledWith(createExpectedResponse());
     });
   });
 });
@@ -30,4 +30,17 @@ function createRequest() {
     }
   ];
   return req;
+}
+
+function createExpectedResponse() {
+  return [
+    {
+      name: "name1",
+      selectedName: "name2"
+    },
+    {
+      name: "name2",
+      selectedName: "name1"
+    }
+  ];
 }
