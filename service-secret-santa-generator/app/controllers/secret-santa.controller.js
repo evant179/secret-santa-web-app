@@ -1,31 +1,37 @@
 var _ = require("underscore");
 
 exports.generate = function (req, res) {
-    console.log('Enter generate');
-    console.log(req.body);
-    let attendees = req.body;
-
-    // initialize map used to keep track of available names for selection
-    let availableNames = createAvailableNameList(attendees);
-
-    let results = [];
     try {
-        attendees.forEach(attendee => {
-            result = {};
-            result.name = attendee.name;
-            result.selectedName = assignSelectedName(attendee, availableNames);
-            results.push(result);
-        });
+        console.log('Enter generate');
+        console.log(req.body);
+        let attendees = req.body;
+
+        // initialize map used to keep track of available names for selection
+        let availableNames = createAvailableNameList(attendees);
+
+        let results = [];
+        try {
+            attendees.forEach(attendee => {
+                result = {};
+                result.name = attendee.name;
+                result.selectedName = assignSelectedName(attendee, availableNames);
+                results.push(result);
+            });
+        }
+        catch (e) {
+            let message = `Unable to generate secret santa results due to: ${e}`;
+            console.log(message);
+            return res.status(406).send({ error: message })
+        }
+
+        console.log('Exit generate');
+        console.log(results);
+        return res.status(200).send(results);
     }
     catch (e) {
-        let message = `Unable to generate secret santa results due to: ${e}`;
-        console.log(message);
-        return res.status(406).send({ error: message })
+        console.log(e);
+        return res.status(500).send({ error: e.message, stack: e.stack })
     }
-
-    console.log('Exit generate');
-    console.log(results);
-    return res.status(200).send(results);
 };
 
 function createAvailableNameList(attendees) {
