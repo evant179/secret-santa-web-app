@@ -8,6 +8,48 @@ const assert = chai.assert;
 const expect = chai.expect;
 
 describe('validator tests', function () {
+  describe('#verifyAttendeesModel', function () {
+    it('returns true on valid model', function () {
+      let attendees = createUniqueAttendees();
+      assert.isTrue(validator.verifyAttendeesModel(attendees));
+    });
+
+    it('throws error on expected attendees array (bad value)', function () {
+      let attendees = 1;
+      expect(validator.verifyAttendeesModel.bind(validator, attendees)).to.throw(BadRequestError);
+    });
+
+    it('throws error on expected attendees array (undefined)', function () {
+      let attendees;
+      expect(validator.verifyAttendeesModel.bind(validator, attendees)).to.throw(BadRequestError);
+    });
+
+    it('throws error on expected non-empty attendees array', function () {
+      let attendees = [];
+      expect(validator.verifyAttendeesModel.bind(validator, attendees)).to.throw(BadRequestError);
+    });
+
+    it('throws error on expected valid name field (empty string)', function () {
+      let attendees = [{ name: "", historicSelections: [], exclusions: [] }];
+      expect(validator.verifyAttendeesModel.bind(validator, attendees)).to.throw(BadRequestError);
+    });
+
+    it('throws error on expected valid name field (undefined)', function () {
+      let attendees = [{ historicSelections: [], exclusions: [] }];
+      expect(validator.verifyAttendeesModel.bind(validator, attendees)).to.throw(BadRequestError);
+    });
+
+    it('throws error on expected historicSelections array', function () {
+      let attendees = [{ name: "name1", historicSelections: "badvalue", exclusions: [] }];
+      expect(validator.verifyAttendeesModel.bind(validator, attendees)).to.throw(BadRequestError);
+    });
+
+    it('throws error on expected exclusions array', function () {
+      let attendees = [{ name: "name1", historicSelections: [], exclusions: "badvalue" }];
+      expect(validator.verifyAttendeesModel.bind(validator, attendees)).to.throw(BadRequestError);
+    });
+  });
+
   describe('#verifyUniqueAttendees', function () {
     it('returns true on unique attendees', function () {
       let attendees = createUniqueAttendees();
@@ -83,9 +125,13 @@ function createUniqueAttendees() {
   return [
     {
       name: "name1",
+      historicSelections: [],
+      exclusions: []
     },
     {
       name: "name2",
+      historicSelections: [],
+      exclusions: []
     }
   ];
 }
@@ -94,9 +140,13 @@ function createNonUniqueAttendees() {
   return [
     {
       name: "name1",
+      historicSelections: [],
+      exclusions: []
     },
     {
       name: "name1",
+      historicSelections: [],
+      exclusions: []
     }
   ];
 }

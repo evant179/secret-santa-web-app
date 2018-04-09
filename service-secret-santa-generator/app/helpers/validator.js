@@ -2,6 +2,26 @@ const SortedArraySet = require("collections/sorted-array-set");
 const BadRequestError = require("../errors/bad-request-error");
 const ValidationError = require("../errors/validation-error");
 
+exports.verifyAttendeesModel = function (attendees) {
+    if (!isDefinedAndValidNonEmptyArray(attendees)) {
+        throw new BadRequestError('attendees is not a non-empty array');
+    }
+
+    attendees.forEach(attendee => {
+        if (!isDefinedAndValid(attendee.name)) {
+            throw new BadRequestError('name is not valid');
+        }
+        if (!isDefinedAndValidArray(attendee.historicSelections)) {
+            throw new BadRequestError('historicSelections is not an array');
+        }
+        if (!isDefinedAndValidArray(attendee.exclusions)) {
+            throw new BadRequestError('exclusions is not an array');
+        }
+    });
+
+    return true;
+}
+
 exports.verifyUniqueAttendees = function (attendees) {
     // no duplicate attendees!
     let set = new SortedArraySet();
@@ -37,4 +57,16 @@ exports.verifyResults = function (attendees, results) {
 
     console.log('Results verified!');
     return true;
+}
+
+function isDefinedAndValid(value) {
+    return value !== undefined && value;
+}
+
+function isDefinedAndValidArray(array) {
+    return isDefinedAndValid(array) && Array.isArray(array);
+}
+
+function isDefinedAndValidNonEmptyArray(array) {
+    return isDefinedAndValidArray(array) && array.length;
 }
