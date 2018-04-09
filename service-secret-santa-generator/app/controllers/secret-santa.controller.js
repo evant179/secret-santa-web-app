@@ -1,5 +1,6 @@
 const BadRequestError = require("../errors/bad-request-error");
 const GenerateError = require("../errors/generate-error");
+const ValidationError = require("../errors/validation-error");
 const validator = require("../helpers/validator");
 const _ = require("underscore");
 
@@ -12,6 +13,7 @@ exports.generate = function (req, res) {
         // verify request data
         validator.verifyUniqueAttendees(attendees);
         let results = handleGenerate(attendees)
+        validator.verifyResults(attendees, results);
 
         console.log('Exit generate with results');
         console.log(results);
@@ -23,6 +25,8 @@ exports.generate = function (req, res) {
         if (e instanceof BadRequestError) {
             return res.status(400).send(error);
         } else if (e instanceof GenerateError) {
+            return res.status(406).send(error)
+        } else if (e instanceof ValidationError) {
             return res.status(406).send(error)
         } else {
             return res.status(500).send(error)
