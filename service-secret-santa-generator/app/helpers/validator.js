@@ -15,5 +15,26 @@ exports.verifyUniqueAttendees = function (attendees) {
 }
 
 exports.verifyResults = function (attendees, results) {
+    // can assume every attendee name is unique.
+
     // verify each attendee has corresponding results
+    let attendeeSet = new SortedArraySet();
+    let resultNameSet = new SortedArraySet();
+    let resultSelectedNameSet = new SortedArraySet();
+    attendees.forEach((attendee) => attendeeSet.add(attendee.name));
+    results.forEach((result) => {
+        resultNameSet.add(result.name)
+        resultSelectedNameSet.add(result.selectedName)
+    });
+
+    if (!attendeeSet.equals(resultNameSet)) {
+        throw new ValidationError('Attendees and generated result NAMES do not sync!');
+    }
+
+    if (!attendeeSet.equals(resultSelectedNameSet)) {
+        throw new ValidationError('Attendees and generated result SELECTED NAMES do not sync!');
+    }
+
+    console.log('Results verified!');
+    return true;
 }

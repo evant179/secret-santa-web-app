@@ -19,6 +19,26 @@ describe('validator tests', function () {
       expect(validator.verifyUniqueAttendees.bind(validator, attendees)).to.throw(BadRequestError);
     });
   });
+
+  describe('#verifyResults', function () {
+    it('returns true on verified results', function () {
+      let attendees = createUniqueAttendees();
+      let results = [{ name: "name2", selectedName: "name1" }, { name: "name1", selectedName: "name2" }];
+      assert.isTrue(validator.verifyResults(attendees, results));
+    });
+
+    it('throws error on NAMES out of sync', function () {
+      let attendees = createUniqueAttendees();
+      let results = [{ name: "name1", selectedName: "name2" }];
+      expect(validator.verifyResults.bind(validator, attendees, results)).to.throw(ValidationError());
+    });
+
+    it('throws error on SELECTED NAMES out of sync', function () {
+      let attendees = createUniqueAttendees();
+      let results = [{ name: "name2", selectedName: "name1" }, { name: "name1", selectedName: "name1" }];
+      expect(validator.verifyResults.bind(validator, attendees, results)).to.throw(ValidationError());
+    });
+  });
 });
 
 describe('SortedArraySet tests', function () {
