@@ -10,7 +10,7 @@ exports.generate = function (req, res) {
         console.log(req.body);
         let attendees = req.body;
 
-        // verify request data
+        validator.verifyAttendeesModel(attendees);
         validator.verifyUniqueAttendees(attendees);
         let results = handleGenerate(attendees)
         validator.verifyResults(attendees, results);

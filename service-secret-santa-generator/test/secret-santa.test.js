@@ -30,10 +30,14 @@ function createRequest() {
   let req = {};
   req.body = [
     {
-      name: "name1"
+      name: "name1",
+      historicSelections: [],
+      exclusions: []
     },
     {
-      name: "name2"
+      name: "name2",
+      historicSelections: [],
+      exclusions: []
     }
   ];
   return req;
@@ -43,7 +47,9 @@ function createRequestWithSingleAttendee() {
   let req = {};
   req.body = [
     {
-      name: "name1"
+      name: "name1",
+      historicSelections: [],
+      exclusions: []
     }
   ];
   return req;
