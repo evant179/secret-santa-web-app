@@ -12,7 +12,7 @@ exports.generate = function (req, res) {
 
         validator.verifyAttendeesModel(attendees);
         validator.verifyUniqueAttendees(attendees);
-        let results = handleGenerate(attendees)
+        let results = handleGenerate(attendees);
         validator.verifyResults(attendees, results);
 
         console.log('Exit generate with results');
@@ -48,9 +48,13 @@ function handleGenerate(attendees) {
     });
 
     attendees.forEach(attendee => {
-        result = {};
+        let result = {};
         result.name = attendee.name;
-        result.selectedName = processSelectedName(attendee, availableNames);
+        if (isDefinedAndValid(attendee.overriddenSelection)) {
+            result.selectedName = attendee.overriddenSelection;
+        } else {
+            result.selectedName = processSelectedName(attendee, availableNames);
+        }
         results.push(result);
     });
 
@@ -59,8 +63,17 @@ function handleGenerate(attendees) {
 
 function createAvailableNameList(attendees) {
     let availableNames = [];
+    let overriddenNames = [];
     attendees.forEach(attendee => {
-        availableNames.push(attendee.name);
+        if (isDefinedAndValid(attendee.overriddenSelection)) {
+            console.log(`[${attendee.name}] has an OVERRIDDEN selection of [${attendee.overriddenSelection}]`);
+            overriddenNames.push(attendee.overriddenSelection);
+        }
+    });
+    attendees.forEach(attendee => {
+        if (!contains(overriddenNames, attendee.name)) {
+            availableNames.push(attendee.name);
+        }
     });
     return availableNames;
 }
@@ -107,4 +120,12 @@ function remove(array, element) {
     if (index !== -1) {
         array.splice(index, 1);
     }
+}
+
+function isDefinedAndValid(value) {
+    return value !== undefined && value;
+}
+
+function contains(array, obj) {
+    return (array.indexOf(obj) != -1);
 }

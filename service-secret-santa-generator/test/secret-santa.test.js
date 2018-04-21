@@ -49,6 +49,14 @@ describe('secret-santa.controller tests', function () {
       // results are inconsistent due to random nature
     });
 
+    it('generates a selected name per attendee with overridden data', function () {
+      let req = createRequestWithOverriddenData1();
+      let res = mock.mockRes();
+      secretsanta.generate(req, res);
+      expect(res.status).to.be.calledWith(200);
+      expect(res.status().send).to.be.calledWith(createExpectedResponse3());
+    });
+
     it('errors for a single attendee', function () {
       let req = createRequestWithSingleAttendee();
       let res = mock.mockRes();
@@ -65,6 +73,13 @@ describe('secret-santa.controller tests', function () {
 
     it('errors for a attendee due to no name pool resulting from exclusion data', function () {
       let req = createRequestWithExclusionData3();
+      let res = mock.mockRes();
+      secretsanta.generate(req, res);
+      expect(res.status).to.be.calledWith(406);
+    });
+
+    it('errors for a attendee due to no name pool resulting from overridden data', function () {
+      let req = createRequestWithOverriddenData2();
       let res = mock.mockRes();
       secretsanta.generate(req, res);
       expect(res.status).to.be.calledWith(406);
@@ -236,6 +251,55 @@ function createRequestWithExclusionData3() {
   return req;
 }
 
+function createRequestWithOverriddenData1() {
+  let req = {};
+  req.body = [
+    {
+      name: "name1",
+      historicSelections: [],
+      exclusions: [],
+      overriddenSelection: "name2"
+    },
+    {
+      name: "name2",
+      historicSelections: [],
+      exclusions: [],
+      overriddenSelection: "name3"
+    },
+    {
+      name: "name3",
+      historicSelections: [],
+      exclusions: [],
+      overriddenSelection: "name1"
+    }
+  ];
+  return req;
+}
+
+function createRequestWithOverriddenData2() {
+  let req = {};
+  req.body = [
+    {
+      name: "name1",
+      historicSelections: [],
+      exclusions: [],
+      overriddenSelection: "name2"
+    },
+    {
+      name: "name2",
+      historicSelections: [],
+      exclusions: [],
+      overriddenSelection: "name1"
+    },
+    {
+      name: "name3",
+      historicSelections: [],
+      exclusions: []
+    }
+  ];
+  return req;
+}
+
 function createRequestWithSingleAttendee() {
   let req = {};
   req.body = [
@@ -274,6 +338,23 @@ function createExpectedResponse2() {
     {
       name: "name3",
       selectedName: "name2"
+    }
+  ];
+}
+
+function createExpectedResponse3() {
+  return [
+    {
+      name: "name1",
+      selectedName: "name2"
+    },
+    {
+      name: "name2",
+      selectedName: "name3"
+    },
+    {
+      name: "name3",
+      selectedName: "name1"
     }
   ];
 }
