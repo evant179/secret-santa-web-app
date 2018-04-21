@@ -100,7 +100,6 @@ function processSelectedName(attendee, availableNames) {
 function adjustNamePool(attendee, namePool) {
     // remove own name from pool
     remove(namePool, attendee.name);
-    // TODO - remove historic, overridden, excluded names from namePool
     attendee.historicSelections.forEach(historicData => {
         remove(namePool, historicData.selectedName);
     });
