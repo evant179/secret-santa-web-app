@@ -25,13 +25,13 @@ describe('secret-santa.controller tests', function () {
       expect(res.status().send).to.be.calledWith(createExpectedResponse2());
     });
 
-    // it('generates a selected name per attendee with historic data; relies on sort', function () {
-    //   let req = createRequestWithHistoricData2();
-    //   let res = mock.mockRes();
-    //   secretsanta.generate(req, res);
-    //   expect(res.status).to.be.calledWith(200);
-    //   // results are inconsistent due to random nature
-    // });
+    it('generates a selected name per attendee with historic data; relies on sort', function () {
+      let req = createRequestWithHistoricData2();
+      let res = mock.mockRes();
+      secretsanta.generate(req, res);
+      expect(res.status).to.be.calledWith(200);
+      // results are inconsistent due to random nature
+    });
 
     it('errors for a single attendee', function () {
       let req = createRequestWithSingleAttendee();
@@ -103,32 +103,32 @@ function createRequestWithHistoricData1() {
   return req;
 }
 
-// function createRequestWithHistoricData2() {
-//   let req = {};
-//   req.body = [
-//     {
-//       name: "name1",
-//       historicSelections: [],
-//       exclusions: []
-//     },
-//     {
-//       name: "name2",
-//       historicSelections: [],
-//       exclusions: []
-//     },
-//     {
-//       name: "name3",
-//       historicSelections: [
-//         {
-//           year: 2010,
-//           selectedName: "name1"
-//         }
-//       ],
-//       exclusions: []
-//     }
-//   ];
-//   return req;
-// }
+function createRequestWithHistoricData2() {
+  let req = {};
+  req.body = [
+    {
+      name: "name1",
+      historicSelections: [],
+      exclusions: []
+    },
+    {
+      name: "name2",
+      historicSelections: [],
+      exclusions: []
+    },
+    {
+      name: "name3",
+      historicSelections: [
+        {
+          year: 2010,
+          selectedName: "name1"
+        }
+      ],
+      exclusions: []
+    }
+  ];
+  return req;
+}
 
 function createRequestWithHistoricData3() {
   let req = {};

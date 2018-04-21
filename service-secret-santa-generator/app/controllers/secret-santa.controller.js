@@ -39,7 +39,13 @@ function handleGenerate(attendees) {
     // initialize array used to keep track of available names for selection
     let availableNames = createAvailableNameList(attendees);
 
-    // TODO - sort by most amount of historic data and exclusions
+    // sort by most to least amount of historic data and exclusions to lessen chance
+    // of generate error
+    attendees.sort((a, b) => {
+        let unavailableCountA = a.historicSelections.length + a.exclusions.length;
+        let unavailableCountB = b.historicSelections.length + b.exclusions.length;
+        return unavailableCountB - unavailableCountA;
+    });
 
     attendees.forEach(attendee => {
         result = {};
