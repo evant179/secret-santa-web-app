@@ -91,6 +91,9 @@ function adjustNamePool(attendee, namePool) {
     attendee.historicSelections.forEach(historicData => {
         remove(namePool, historicData.selectedName);
     });
+    attendee.exclusions.forEach(exclusionName => {
+        remove(namePool, exclusionName);
+    });
 }
 
 /**

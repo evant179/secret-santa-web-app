@@ -33,6 +33,22 @@ describe('secret-santa.controller tests', function () {
       // results are inconsistent due to random nature
     });
 
+    it('generates a selected name per attendee with exclusion data', function () {
+      let req = createRequestWithExclusionData1();
+      let res = mock.mockRes();
+      secretsanta.generate(req, res);
+      expect(res.status).to.be.calledWith(200);
+      expect(res.status().send).to.be.calledWith(createExpectedResponse2());
+    });
+
+    it('generates a selected name per attendee with exclusion data; relies on sort', function () {
+      let req = createRequestWithExclusionData2();
+      let res = mock.mockRes();
+      secretsanta.generate(req, res);
+      expect(res.status).to.be.calledWith(200);
+      // results are inconsistent due to random nature
+    });
+
     it('errors for a single attendee', function () {
       let req = createRequestWithSingleAttendee();
       let res = mock.mockRes();
@@ -42,6 +58,13 @@ describe('secret-santa.controller tests', function () {
 
     it('errors for a attendee due to no name pool resulting from historic data', function () {
       let req = createRequestWithHistoricData3();
+      let res = mock.mockRes();
+      secretsanta.generate(req, res);
+      expect(res.status).to.be.calledWith(406);
+    });
+
+    it('errors for a attendee due to no name pool resulting from exclusion data', function () {
+      let req = createRequestWithExclusionData3();
       let res = mock.mockRes();
       secretsanta.generate(req, res);
       expect(res.status).to.be.calledWith(406);
@@ -142,6 +165,67 @@ function createRequestWithHistoricData3() {
         }
       ],
       exclusions: []
+    },
+    {
+      name: "name2",
+      historicSelections: [],
+      exclusions: []
+    }
+  ];
+  return req;
+}
+
+function createRequestWithExclusionData1() {
+  let req = {};
+  req.body = [
+    {
+      name: "name1",
+      historicSelections: [],
+      exclusions: ["name2"]
+    },
+    {
+      name: "name2",
+      historicSelections: [],
+      exclusions: ["name3"]
+    },
+    {
+      name: "name3",
+      historicSelections: [],
+      exclusions: ["name1"]
+    }
+  ];
+  return req;
+}
+
+function createRequestWithExclusionData2() {
+  let req = {};
+  req.body = [
+    {
+      name: "name1",
+      historicSelections: [],
+      exclusions: []
+    },
+    {
+      name: "name2",
+      historicSelections: [],
+      exclusions: []
+    },
+    {
+      name: "name3",
+      historicSelections: [],
+      exclusions: ["name1"]
+    }
+  ];
+  return req;
+}
+
+function createRequestWithExclusionData3() {
+  let req = {};
+  req.body = [
+    {
+      name: "name1",
+      historicSelections: [],
+      exclusions: ["name2"]
     },
     {
       name: "name2",
