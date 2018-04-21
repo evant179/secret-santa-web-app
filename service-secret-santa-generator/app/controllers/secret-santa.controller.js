@@ -36,8 +36,10 @@ exports.generate = function (req, res) {
 
 function handleGenerate(attendees) {
     let results = [];
-    // initialize map used to keep track of available names for selection
+    // initialize array used to keep track of available names for selection
     let availableNames = createAvailableNameList(attendees);
+
+    // TODO - sort by most amount of historic data and exclusions
 
     attendees.forEach(attendee => {
         result = {};
@@ -59,11 +61,7 @@ function createAvailableNameList(attendees) {
 
 function processSelectedName(attendee, availableNames) {
     let namePool = availableNames.slice(); // shallow copy
-
-    // TODO - remove historic, overridden, excluded names from namePool
-
-    // remove own name from pool
-    remove(namePool, attendee.name);
+    adjustNamePool(attendee, namePool);
 
     if (namePool.length < 1) {
         let message = `Secret santa generation has stopped! Please try again. ` +
@@ -78,6 +76,15 @@ function processSelectedName(attendee, availableNames) {
     // remove selected name from overall available name pool
     remove(availableNames, selectedName);
     return selectedName;
+}
+
+function adjustNamePool(attendee, namePool) {
+    // remove own name from pool
+    remove(namePool, attendee.name);
+    // TODO - remove historic, overridden, excluded names from namePool
+    attendee.historicSelections.forEach(historicData => {
+        remove(namePool, historicData.selectedName);
+    });
 }
 
 /**
