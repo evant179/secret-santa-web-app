@@ -11,12 +11,11 @@ script:
   - npm install -g serverless
   - sls deploy
   # deploy UI to s3 bucket
-  # - cd ../ui-secret-santa
-  # - nvm install 8.10.0
-  # - nvm use 8.10.0
-  # - nvm list
-  # - npm install -g @angular/cli
-  # - npm install -g serverless
-  # - npm install
-  # - ng build
-  # - sls s3sync
+  - cd ../ui-secret-santa
+  - nvm install 8.11.1
+  - nvm use 8.11.1
+  - nvm list
+  - npm install -g serverless
+  - npm install
+  - npm run build
+  - sls s3sync

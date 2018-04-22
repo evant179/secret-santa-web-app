@@ -12,4 +12,4 @@ provider:
 custom:
   s3Sync:
     - bucketName: secretsatan.net
-      localDir: dist # required
+      localDir: build # required
