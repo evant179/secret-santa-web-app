@@ -9,9 +9,10 @@
 
 .App-header {
   background-color: #222;
-  height: 150px;
+  height: 60px;
   padding: 20px;
   color: white;
+  font-family: Georgia;
 }
 
 .App-title {
@@ -20,6 +21,13 @@
 
 .App-intro {
   font-size: large;
+}
+
+.main-logo
+{
+  width: 400px;
+  height: 400px;
+  padding: 90px;
 }
 
 @keyframes App-logo-spin {
